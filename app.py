@@ -1,6 +1,4 @@
 """
-COMP5349 Assignment: Image Captioning App using Gemini API and AWS Services
-
 IMPORTANT:
 Before running this application, ensure that you update the following configurations:
 1. Replace the GEMINI API key (`GOOGLE_API_KEY`) with your own key from Google AI Studio.
@@ -20,6 +18,7 @@ Failure to update these values will result in authentication errors or failure t
 # pip install boto3 werkzeug
 # sudo yum install -y mariadb105
 
+import os
 import boto3  # AWS S3 SDK
 import mysql.connector  # MySQL database connector
 from flask import Flask, request, render_template, jsonify  # Web framework
@@ -29,7 +28,7 @@ import base64  # Encoding image data for API processing
 from io import BytesIO  # Handling in-memory file objects
 
 # Configure Gemini API, REPLACE with your Gemini API key
-GOOGLE_API_KEY = "AIzaSyBINb1GTq8ghoXJ4jhO99e37TTRlOoT9FA"
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', '')
 genai.configure(api_key=GOOGLE_API_KEY)
 
 # Choose a Gemini model for generating captions
@@ -58,19 +57,18 @@ def generate_image_caption(image_data):
 app = Flask(__name__)
 
 # AWS S3 Configuration, REPLACE with your S3 bucket
-S3_BUCKET = "image-app-bucket-550656302"
-S3_REGION = "us-east-1"
-
+S3_BUCKET = os.environ.get('S3_BUCKET', '')
+S3_REGION = os.environ.get('AWS_REGION', 'us-east-1')
 
 def get_s3_client():
     """Returns a new S3 client that automatically refreshes credentials if using an IAM role."""
     return boto3.client("s3", region_name=S3_REGION)
 
 # Database Configuration, REPLACE with your RDS credentials
-DB_HOST = "image-app-database.c99eylq8cyzl.us-east-1.rds.amazonaws.com"
-DB_NAME = "image_caption_db"
-DB_USER = "admin"
-DB_PASSWORD = "awsNOK123"
+DB_HOST = os.environ.get('DB_HOST', '')
+DB_NAME = os.environ.get('DB_NAME', 'image_caption_db')
+DB_USER = os.environ.get('DB_USER', 'admin')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
 
 def get_db_connection():
     """
