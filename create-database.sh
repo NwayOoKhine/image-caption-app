@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # RDS connection details
-DB_HOST = os.environ.get('DB_HOST', '')           # Replace with your RDS endpoint
-DB_USER = os.environ.get('DB_USER', 'admin')
-DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
+DB_HOST = "image-app-database.c99eylq8cyzl.us-east-1.rds.amazonaws.com"
+DB_USER = "admin"
+DB_PASSWORD = "MyNewPassword123!"
 SQL_COMMANDS=$(cat <<EOF
 /*
   Database Creation Script for the Image Captioning App
