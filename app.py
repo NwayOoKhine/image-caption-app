@@ -32,7 +32,7 @@ GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', '')
 genai.configure(api_key=GOOGLE_API_KEY)
 
 # Choose a Gemini model for generating captions
-model = genai.GenerativeModel(model_name="gemini-2.0-pro-exp-02-05")
+model = genai.GenerativeModel(model_name="gemini-2.5-flash-preview-04-17")
 
 def generate_image_caption(image_data):
     """
