@@ -174,19 +174,35 @@ def gallery():
         results = cursor.fetchall()
         connection.close()
 
-        images_with_captions = [
-            {
-                "url": get_s3_client().generate_presigned_url(
+        images_with_captions = []
+        for row in results:
+            # Generate URLs for both original and thumbnail
+            original_url = get_s3_client().generate_presigned_url(
+                "get_object",
+                Params={"Bucket": S3_BUCKET, "Key": row["image_key"]},
+                ExpiresIn=3600,
+            )
+            
+            # Check if thumbnail exists
+            thumbnail_key = f"thumbnails/{row['image_key']}"
+            try:
+                get_s3_client().head_object(Bucket=S3_BUCKET, Key=thumbnail_key)
+                thumbnail_url = get_s3_client().generate_presigned_url(
                     "get_object",
-                    Params={"Bucket": S3_BUCKET, "Key": row["image_key"]},
-                    ExpiresIn=3600,  # URL expires in 1 hour
-                ),
-                "caption": row["caption"],
-            }
-            for row in results
-        ]
+                    Params={"Bucket": S3_BUCKET, "Key": thumbnail_key},
+                    ExpiresIn=3600,
+                )
+            except:
+                thumbnail_url = original_url  # Fallback to original if no thumbnail
+            
+            images_with_captions.append({
+                "url": original_url,
+                "thumbnail_url": thumbnail_url,
+                "caption": row["caption"] or "Caption being generated...",
+            })
 
         return render_template("gallery.html", images=images_with_captions)
+
 
     except Exception as e:
         return render_template("gallery.html", error=f"Database Error: {str(e)}")
