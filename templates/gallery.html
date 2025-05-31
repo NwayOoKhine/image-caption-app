@@ -10,9 +10,16 @@
     {% elif images %}
         <div class="gallery">
             {% for image in images %}
-                <div class="image-container" style="display: flex; align-items: center; margin-bottom: 20px;">
-                    <img src="{{ image.url }}" alt="Uploaded Image" style="max-width: 200px; border-radius: 5px; margin-right: 20px;">
-                    <p><strong>Caption:</strong> {{ image.caption }}</p>
+                <div class="image-container" style="display: flex; align-items: center; margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
+                    <div style="margin-right: 20px;">
+                        <h4>Thumbnail:</h4>
+                        <img src="{{ image.thumbnail_url }}" alt="Thumbnail" style="max-width: 150px; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <h4>Original Image:</h4>
+                        <img src="{{ image.url }}" alt="Original Image" style="max-width: 300px; border-radius: 5px; margin-bottom: 10px;">
+                        <p><strong>Caption:</strong> {{ image.caption }}</p>
+                    </div>
                 </div>
             {% endfor %}
         </div>
